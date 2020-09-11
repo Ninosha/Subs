@@ -2,17 +2,28 @@ from flask_restful import Resource,reqparse
 from flask_jwt import jwt_required, JWT
 from models.Items import Item_model
 
+hal = ["LSD", "Ketamine"]
+stim = ["Meth", "Crack", "Cocaine", "Amphetamine"]
+dep = ["Alcohol", "Heroin"]
+
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('breed',
                         type=str,
                         required=True,
                         help="gtxovt sheiyvanot nivtierebis tipi")
+
     @jwt_required()
     def get(self, name):
         item = Item_model.find_by_name(name)
-        if item:
-            return item.json()
+        data = Item.parser.parse_args()
+        dat = data["breed"]
+        if dat in hal:
+            return item.json(), {'message': f"don't take {dat} with {dep}"}
+        if dat in stim:
+            return item.json(), {'message': f"don't take {dat} with {dep}"}
+        if dat in dep:
+            return item.json(), {'message': f"don't take {dat} with {hal} and {stim}"}
         else:
             return {'message': f' {name} უკვე არის ბაზაში'}, 404
 
