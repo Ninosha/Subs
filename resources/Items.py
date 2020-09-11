@@ -13,6 +13,11 @@ class Item(Resource):
                         required=True,
                         help="gtxovt sheiyvanot nivtierebis tipi")
 
+    parser.add_argument('name',
+                        type=str,
+                        required=True,
+                        help="gtxovt sheiyvanot nivtierebis saxeli")
+
     @jwt_required()
     def get(self, name):
         item = Item_model.find_by_name(name)
