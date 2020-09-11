@@ -17,8 +17,8 @@ jwt = JWT(app, authenticate, identity)
 
 
 @app.route('/')
-def redirect2url():
-    return redirect("https://github.com/Ninosha/Subs")
+def home():
+    return redirect("https://documenter.getpostman.com/view/11823818/TVK5c1rZ")
 
 api.add_resource(Item, '/items/<string:name>')
 api.add_resource(Items_List, '/items')
