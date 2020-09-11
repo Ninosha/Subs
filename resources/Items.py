@@ -1,36 +1,36 @@
 from flask_restful import Resource,reqparse
-from flask_jwt import jwt_required, JWT
+from flask_jwt import jwt_required
 from models.Items import Item_model
 
-hal = ["LSD", "Ketamine"]
-stim = ["Meth", "Crack", "Cocaine", "Amphetamine"]
-dep = ["Alcohol", "Heroin"]
+
 
 class Item(Resource):
     parser = reqparse.RequestParser()
+
     parser.add_argument('breed',
                         type=str,
                         required=True,
-                        help="gtxovt sheiyvanot nivtierebis tipi")
+                        help="გთხოვთ შეიყვანოთ ნივთიერების ტიპი")
 
     parser.add_argument('name',
                         type=str,
                         required=True,
-                        help="gtxovt sheiyvanot nivtierebis saxeli")
+                        help="გთხოვთ შეიყვანოთ ნივთიერების დასახელება")
 
     @jwt_required()
     def get(self, name):
+        hal = ["LSD", "Ketamine"]
+        stim = ["Meth", "Crack", "Cocaine", "Amphetamine"]
+        dep = ["Alcohol", "Heroin"]
         item = Item_model.find_by_name(name)
-        data = Item.parser.parse_args()
-        dat = data["name"]
-        if dat in hal:
-            return item.json(), {'message': f"don't take {dat} with {dep}"}
-        if dat in stim:
-            return item.json(), {'message': f"don't take {dat} with {dep}"}
-        if dat in dep:
-            return item.json(), {'message': f"don't take {dat} with {hal} and {stim}"}
+        if name in hal:
+            return {'message': f"{name} არის ჰალუცინოგენი. {name}ის როგორც ჰალუცინოგენის მიღება შემდეგ ნივთიერებებთან არის საშიში: {dep}"}
+        if name in stim:
+            return {'message': f"{name} არის სტიმულატორი. {name}ის როგორც სტიმულატორის მიღება შემდეგ ნივთიერებებთან არის საშიში: {dep}"}
+        if name in dep:
+            return {'message': f" {name} არის დეპრესანტი. {name}ის როგორც დეპრესანტის მიღება შემდეგ ნივთიერებებთან არის საშიში: {hal} და {stim}"}
         else:
-            return {'message': f' {name} უკვე არის ბაზაში'}, 404
+            return {'message': f' {name} ნივთიერება არ არის სიაში'}, 404
 
     def post(self, name):
         if Item_model.find_by_name(name):
