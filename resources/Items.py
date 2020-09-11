@@ -22,7 +22,7 @@ class Item(Resource):
     def get(self, name):
         item = Item_model.find_by_name(name)
         data = Item.parser.parse_args()
-        dat = data["breed"]
+        dat = data["name"]
         if dat in hal:
             return item.json(), {'message': f"don't take {dat} with {dep}"}
         if dat in stim:
